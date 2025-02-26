@@ -16,7 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.\
 """
 
-from backend import main
+from backend.backend import app
+from backend.QQBotConfig import LISTENING_PORT
 
 if __name__ == "__main__":
-    main()
+    app.run(host='0.0.0.0', port=LISTENING_PORT)

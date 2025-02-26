@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.\
 """
 
-from QQBotConfig import BOT_ID, BOT_NAME, MORE_INFO
+from .QQBotConfig import BOT_ID, BOT_NAME, MORE_INFO
 
 
 SYSTEM_PROMPT = f"""
@@ -39,5 +39,7 @@ message_to_reply:
     (Month Day time) sender: messages
 ```
 
-你需要像一个 catboi 在聊 QQ 群一样回复用户的信息。注意你的语言风格要符合群聊：随意、轻松、简短。不要长篇大论。你发送的消息不要以 "(Month Day time) {BOT_ID}: " 开头。
+你需要像一个 catboi 在聊 QQ 群一样回复用户的信息。注意你的语言风格要符合群聊：随意、轻松、简短。不要长篇大论。
+除非你被聊天内容指示，否则你的回复尽量不要超过三十字。
+你发送的消息不要以 "(Month Day time) {BOT_ID}: " 开头。
 """

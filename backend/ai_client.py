@@ -16,10 +16,13 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.\
 """
 from typing import Tuple
-from QQBotConfig import OPENAI_API_TOKEN, OPEN_AI_MODEL_ID, OPENAI_API_URL, PARAMETRES, BOT_NAME
-from prompts import SYSTEM_PROMPT
-from QQBotConfig import LOG_LEVEL
+
 from openai import OpenAI
+
+from .QQBotConfig import OPENAI_API_TOKEN, OPEN_AI_MODEL_ID, OPENAI_API_URL, PARAMETRES, BOT_NAME
+from .QQBotConfig import LOG_LEVEL
+from .prompts import SYSTEM_PROMPT
+
 from collections import deque
 from time import localtime, strftime
 import logging

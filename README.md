@@ -40,7 +40,8 @@ The project is still under development, so nothing is guaranteed to work. And ch
 This project is licensed under the GPL-3.0-or-later License - see the LICENSE file for details.
 
 ```
-  QQAIBot - A QQ Bot that integrates with OpenAI-compatible APIs to participate in group chats.
+  QQAIBot - A QQ Bot that integrates with OpenAI-compatible APIs to 
+  participate in group chats.
     Copyright (C) 2024  Majorana Oedipus (majoranaoedipus@posteo.org)
 
     This program is free software: you can redistribute it and/or modify

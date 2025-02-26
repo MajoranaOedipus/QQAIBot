@@ -18,20 +18,19 @@
 from typing import Tuple
 from flask import Flask, request, jsonify
 import requests
-from QQBotConfig import HISTORY_SIZE, BOT_ID, SELF_ID, BOT_NAME, GROUP_ID
-from QQBotConfig import LOG_LEVEL
-from QQBotConfig import LISTENING_PORT, API_URL
-
-from ai_client import get_ai_response
 
 from collections import deque
 import logging
 from time import localtime, strftime
 
+from .QQBotConfig import HISTORY_SIZE, BOT_ID, SELF_ID, BOT_NAME, GROUP_ID
+from .QQBotConfig import LOG_LEVEL
+from .QQBotConfig import LISTENING_PORT, API_URL
+from .ai_client import get_ai_response
+
 logging.basicConfig(level=LOG_LEVEL, format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
-
 
 
 recent_messages: deque[Tuple[str, str]] = deque(maxlen=HISTORY_SIZE)
@@ -130,5 +129,4 @@ def generate_response(sender_id: int, message: str, recent_messages: deque[str])
 def main():
     app.run(host='0.0.0.0', port=LISTENING_PORT)
 
-if __name__ == '__main__':
-    main()
+
