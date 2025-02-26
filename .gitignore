@@ -1,0 +1,5 @@
+*.log
+nohup.out
+.vscode/launch.json
+__pycache__/
+QQBotConfig.py
