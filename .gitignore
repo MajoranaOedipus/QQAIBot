@@ -3,3 +3,4 @@ nohup.out
 .vscode/launch.json
 __pycache__/
 QQBotConfig.py
+backend/data_templates.py
