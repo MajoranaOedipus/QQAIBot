@@ -15,9 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.\
 """
+import logging
 
-from backend.backend import app
-from backend.QQBotConfig import LISTENING_PORT
+from backend.backend import create_app
+from configs import configs
+
+logging.basicConfig(level=configs.LOG_LEVEL, format='%(asctime)s - %(levelname)s - %(message)s')
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=LISTENING_PORT)
+    app = create_app(configs)
+    app.run(host='0.0.0.0', port=configs.LISTENING_PORT)

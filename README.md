@@ -14,7 +14,7 @@ For the scripts to run, you will need a working installation of NTQQ, with the L
 
 ## Configuration
 
-Complete the QQBotConfig_sample.py file and rename it to QQBotConfig.py. 
+Complete the configs_template.py file and rename it to configs.py. 
 
 
 ## Running the Bot
