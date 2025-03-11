@@ -1,3 +1,4 @@
+from time import localtime, strftime
 import unittest
 from unittest.mock import patch, MagicMock
 from collections import deque
@@ -13,7 +14,7 @@ from backend.backend import (
     generate_response, 
     make_chat_record,
     get_text_from_message,
-    send_message,
+    send_group_message,
     was_bot_mentioned
 )
 
@@ -68,10 +69,15 @@ class QQBotTest(unittest.TestCase):
     def test_make_chat_record(self, mock_get_text):
         """测试聊天记录生成功能"""
         mock_get_text.return_value = "你好，@BOT"
+        t = strftime("%d %b %H:%M:%S", localtime(self.sample_message["time"]))
         
         result = make_chat_record(self.sample_message, self.configs)
         
-        self.assertEqual(result, "群昵称: 你好，@BOT")
+        self.assertEqual(result, {
+            "role": "user",
+            "content": f"({t}) 群昵称: 你好，@BOT",
+            "name": "群昵称"
+            })
         mock_get_text.assert_called_once()
 
     def test_was_bot_mentioned(self):
@@ -85,13 +91,13 @@ class QQBotTest(unittest.TestCase):
         self.assertFalse(result)
 
     @patch('requests.post')
-    def test_send_message(self, mock_post):
+    def test_send_group_message(self, mock_post):
         """测试发送消息功能"""
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_post.return_value = mock_response
 
-        send_message("测试消息", self.configs, mode="reply", msg_id="123456")
+        send_group_message("测试消息", self.configs, mode="reply", msg_id="123456")
         
         mock_post.assert_called_once()
         # 检查 URL 是否正确
@@ -102,8 +108,8 @@ class QQBotTest(unittest.TestCase):
     @patch('backend.backend.was_bot_mentioned')
     @patch('backend.backend.triggered_with')
     @patch('backend.backend.generate_response')
-    @patch('backend.backend.send_message')
-    def test_process_group_msg(self, mock_send_message, mock_generate, mock_triggered, mock_was_mentioned):
+    @patch('backend.backend.send_group_message')
+    def test_process_group_msg(self, mock_send_group_message, mock_generate, mock_triggered, mock_was_mentioned):
         """测试群消息处理功能"""
         # 设置模拟返回值
         mock_triggered.return_value = "reply"
@@ -115,7 +121,7 @@ class QQBotTest(unittest.TestCase):
         # 验证模拟函数是否被正确调用
         mock_triggered.assert_called_once_with(self.sample_message, self.recent_messages, self.configs)
         mock_generate.assert_called_once()
-        mock_send_message.assert_called_once_with("测试回复", self.configs, mode="reply", msg_id=self.sample_message["message_id"])
+        mock_send_group_message.assert_called_once_with("测试回复", self.configs, mode="reply", msg_id=self.sample_message["message_id"])
     
         
     def test_get_text_from_message(self):

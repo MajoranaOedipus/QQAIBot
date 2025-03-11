@@ -5,3 +5,4 @@ __pycache__/
 QQBotConfig.py
 backend/data_templates.py
 configs.py
+.vscode

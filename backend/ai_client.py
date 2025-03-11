@@ -17,7 +17,7 @@
 """
 from openai import OpenAI
 
-from .__types__ import QQBotConfig
+from .__types__ import QQBotConfig, RecentMessages, Message
 from .prompts import IMAGE_UNDERSTANDING_PROMPT, READ_KUUKI_PROMPT_TEMPLATE
 
 import logging
@@ -25,7 +25,7 @@ import logging
 
 def get_ai_response(
         system_prompt: str, 
-        user_prompt: str,
+        recent_messages: RecentMessages,
         configs: QQBotConfig
         ) -> str:
     OPENAI_API_TOKEN, OPENAI_API_URL, OPEN_AI_MODEL_ID = (
@@ -33,12 +33,12 @@ def get_ai_response(
     )
     chatbot_client = OpenAI(api_key=OPENAI_API_TOKEN, base_url=OPENAI_API_URL)
 
-    logging.debug(f"Generates AI response with system prompt of length {len(system_prompt)} and user prompt of length {len(user_prompt)}")
+    logging.debug(f"Generates AI response...")
     respond = chatbot_client.chat.completions.create(
                 model = OPEN_AI_MODEL_ID,
                 messages = [
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
+                    *recent_messages     # type: ignore
                     ]
         )
     logging.debug(f"AI response: {respond}")
@@ -48,24 +48,25 @@ def get_ai_response(
         logging.error(f"No response from {OPEN_AI_MODEL_ID}")
         return "抱歉喵，我和母星的连接好像中断了……"
 
-
-
-def get_kuuki(user_prompt: str, configs: QQBotConfig) -> str:
+def get_kuuki(
+        last_message: Message,
+        recent_messages: RecentMessages, configs: QQBotConfig) -> str:
     KUUKI_READER_API_TOKEN, KUUKI_READER_API_URL, KUUKI_READER_MODEL_ID = (
         configs.KUUKI_READER_API_TOKEN, 
         configs.KUUKI_READER_API_URL, 
         configs.KUUKI_READER_MODEL_ID
     )
     kuuki_reader_client = OpenAI(api_key=KUUKI_READER_API_TOKEN, base_url=KUUKI_READER_API_URL)
-    logging.debug(f"Generates Kuuki Reader response from messgae {user_prompt}")
+    logging.debug(f"Generates Kuuki Reader response from messgae {last_message}")
     respond = kuuki_reader_client.chat.completions.create(
         model=KUUKI_READER_MODEL_ID,
         messages=[
             {
                 "role": "system", 
-                "content": READ_KUUKI_PROMPT_TEMPLATE.format(**configs.to_dict())
+                "content": READ_KUUKI_PROMPT_TEMPLATE.format(**configs.to_dict()),
+                "name": "Kuuki Reader"
             },
-            {"role": "user", "content": user_prompt}
+            *recent_messages    # type: ignore
         ]
     )
     if respond.choices and respond.choices[0].message.content is not None:

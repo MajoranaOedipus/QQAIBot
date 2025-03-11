@@ -1,10 +1,11 @@
 from collections import deque
 from dataclasses import dataclass, asdict
-from typing import Any, Literal, Tuple
+from typing import Any, Literal, Required, Tuple, TypeAlias, TypedDict
 
 type LogLevel = Literal[
-        "NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
-        ]
+    "NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
+]
+
 
 @dataclass(kw_only=True)
 class QQBotConfig:
@@ -42,6 +43,19 @@ class QQBotConfig:
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
-type RecentMessages = deque[Tuple[str, str]]
+
+class UserMessage(TypedDict, total=False):
+    role: Required[Literal["user"]]
+    content: Required[str]
+    name: str
+
+class AssistantMessage(TypedDict, total=False):
+    role: Required[Literal["assistant"]]
+    content: Required[str]
+    name: str
+
+Message: TypeAlias = UserMessage | AssistantMessage
+
+type RecentMessages = deque[Message]
 
 type EventReport = dict[str, Any]   # TODO: refine this type
